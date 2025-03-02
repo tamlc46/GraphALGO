@@ -1,0 +1,51 @@
+﻿<Window x:Name="InfoBox"
+        x:Class="GraphTheory.AboutBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GraphTheory"
+        mc:Ignorable="d"
+        Title="About" Height="290" Width="400" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" WindowStyle="ToolWindow">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="130"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="182"/>
+            </Grid.RowDefinitions>
+            <Image Grid.Row="0" Width="auto" Height="auto" HorizontalAlignment="Center" Source="Resource/DHSP.jpg"/>
+            <Image Grid.Row="1" Width="auto" Height="auto" HorizontalAlignment="Center" Source="Resource/GraphTheory.png"/>
+        </Grid>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Grid.Column="1">
+            <TextBlock FontSize="25" FontWeight="Bold" FontFamily="Verdana" TextAlignment="Center" Text="GRAPH ALGO"/>
+            <TextBlock FontSize="11" Text="Version. 1.0.0.0" HorizontalAlignment="Right" Margin="0,0,0,18"/>
+            <TextBlock FontSize="15" FontWeight="Bold" FontFamily="Verdana" Text="Team Member"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="15"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" Text="Lương Công Tâm"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Right" Text="43.01.104.157"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" Text="Vương Lê Minh Nguyên"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Right" Text="43.01.104.117"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" Text="Lê Tấn Khôi"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Right" Text="43.01.104.084"/>
+            </Grid>
+            <TextBlock FontFamily="Verdana" FontSize="15" FontWeight="Bold" Text="Giảng viên hỗ trợ"/>
+            <TextBlock FontFamily="Verdana" FontSize="13" FontWeight="Bold" Text="TS. Nguyễn Viết Hưng"  Margin="0,3"/>
+            <TextBlock FontFamily="Verdana" FontSize="13" FontWeight="Bold" Text="Lương Trần Ngọc Khiết" Margin="0,3"/>
+            <TextBlock FontFamily="Verdana" FontSize="15" Text="Khoa: Công Nghệ Thông Tin"/>
+        </StackPanel>
+    </Grid>
+</Window>

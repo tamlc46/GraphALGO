@@ -1,0 +1,307 @@
+﻿<Window x:Name="main"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GraphTheory"
+        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="GraphTheory.MainWindow"
+        mc:Ignorable="d"
+        Title="Graph Theory" Height="600" Width="860" Icon="Resource/Logo.ico" SizeChanged="resizeElement" MinHeight="600" MinWidth="860">
+    <Window.Resources>
+        <Style x:Key="toggleStyle" BasedOn="{StaticResource {x:Type ToggleButton}}" TargetType="{x:Type RadioButton}">
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Background" Value="#FF00DCFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <RoutedUICommand x:Key="OpenGraphCommand"/>
+        <RoutedUICommand x:Key="NewGraphCommand"/>
+        <RoutedUICommand x:Key="SaveGraphCommand"/>
+        <RoutedUICommand x:Key="SaveAsGraphCommand"/>
+        <RoutedUICommand x:Key="SaveMatrixCommand"/>
+        <RoutedUICommand x:Key="SaveImageCommand"/>
+        <RoutedCommand x:Key="ToggleMode"/>
+        <RoutedCommand x:Key="ToggleDraw"/>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource NewGraphCommand}" Executed="NewGraph"/>
+        <CommandBinding Command="{StaticResource OpenGraphCommand}" Executed="OpenGraph"/>
+        <CommandBinding Command="{StaticResource SaveGraphCommand}" Executed="SaveGraph"/>
+        <CommandBinding Command="{StaticResource SaveAsGraphCommand}" Executed="SaveGraphAs"/>
+        <CommandBinding Command="{StaticResource SaveMatrixCommand}" Executed="SaveMatrix"/>
+        <CommandBinding Command="{StaticResource SaveImageCommand}" Executed="SaveImage"/>
+        <CommandBinding Command="{StaticResource ToggleMode}" Executed="ToggleMode" CanExecute="CanToggle"/>
+        <CommandBinding Command="{StaticResource ToggleDraw}" Executed="ToggleDraw"/>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="N" Command="{StaticResource NewGraphCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="O" Command="{StaticResource OpenGraphCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{StaticResource SaveGraphCommand}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="S" Command="{StaticResource SaveAsGraphCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="M" Command="{StaticResource SaveMatrixCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="I" Command="{StaticResource SaveImageCommand}"/>
+        <KeyBinding Modifiers="Ctrl" Key="E" Command="{StaticResource ToggleMode}" CommandParameter="{x:Reference Name=BtnAddNode}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="E" Command="{StaticResource ToggleMode}" CommandParameter="{x:Reference Name=BtnDelNode}"/>
+        <KeyBinding Modifiers="Ctrl" Key="C" Command="{StaticResource ToggleMode}" CommandParameter="{x:Reference Name=BtnAddConnect}"/>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="C" Command="{StaticResource ToggleMode}" CommandParameter="{x:Reference Name=BtnDelConnect}"/>
+        <KeyBinding Modifiers="Ctrl" Key="D" Command="{StaticResource ToggleDraw}" CommandParameter="{x:Reference Name=BtnDrawConnect}"/>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="22"/>
+        </Grid.RowDefinitions>
+        <TabControl Name="MenuControl" Height="auto" VerticalAlignment="Top" Grid.Row="0">
+            <TabItem x:Name="mnuGeneral" Header="General" Width="400" Margin="-2,-1" Grid.IsSharedSizeScope="True" >
+                <Grid x:Name="gridmnuGeneral" Background="LightSteelBlue">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="2.5"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2.5"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="2.5"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Width="54" Height="54" x:Name="BtnNew" Grid.Column="0" Command="{StaticResource NewGraphCommand}">
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="32" Width="32" Source="Resource/new.ico" Margin="0,0,0,0"/>
+                            <TextBlock FontSize="8.68" TextBlock.TextAlignment="Center" Text="New"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Width="54" Height="54" x:Name="BtnOpen" Grid.Column="1" Command="{StaticResource OpenGraphCommand}">
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="32" Width="32" Source="Resource/folder.png" Margin="0,0,0,0"/>
+                            <TextBlock FontSize="8.68" TextBlock.TextAlignment="Center" Text="Open"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Width="54" Height="54" x:Name="BtnSave" Grid.Column="2" Command="{StaticResource SaveGraphCommand}">
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="32" Width="32" Source="Resource/save.png" Margin="0,0,0,0"/>
+                            <TextBlock FontSize="8.68" TextBlock.TextAlignment="Center" Text="Save"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Width="54" Height="54" x:Name="BtnSaveAs" Grid.Column="3" Command="{StaticResource SaveAsGraphCommand}">
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="32" Width="32" Source="Resource/saveas.png" Margin="0,0,0,0"/>
+                            <TextBlock FontSize="8.68" TextBlock.TextAlignment="Center" Text="Save As"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="BtnMatrixExport" Height="54" Width="54" Grid.Column="4" Command="{StaticResource SaveMatrixCommand}">
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="32" Width="32" Margin="0,0,0,0" Source="Resource/matrix.png"/>
+                            <TextBlock FontSize="8.68" TextAlignment="Center" Text="Save Matrix"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="BtnImageExport" Height="54" Width="54" Grid.Column="5" Command="{StaticResource SaveImageCommand}" >
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="32" Width="32" Margin="0,0,0,0" Source="Resource/image.ico"/>
+                            <TextBlock FontSize="8.68" TextAlignment="Center" Text="Save Image"/>
+                        </StackPanel>
+                    </Button>
+                    <Rectangle Grid.Column="6" Fill="SteelBlue"/>
+                    <StackPanel x:Name="ModeBtnHandle" Orientation="Horizontal" Grid.Column="7">
+                        <RadioButton GroupName="ModeSelection" x:Name="BtnAddNode" Height="54" Width="54" 
+                                     Style="{StaticResource toggleStyle}" PreviewMouseDown="UnCheck"
+                                     IsChecked="{Binding addNodes, ElementName=Graphbox, Mode=TwoWay}">
+                            <StackPanel Orientation="Vertical">
+                                <Image Height="32" Width="32" Margin="0,0,0,0" Source="Resource/addnode.png"/>
+                                <TextBlock FontSize="8.68" TextBlock.TextAlignment="Center" Text="Add Node"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton GroupName="ModeSelection" x:Name="BtnDelNode" Height="54" Width="54"
+                                     Style="{StaticResource toggleStyle}"  PreviewMouseDown="UnCheck"
+                                     IsChecked="{Binding delNodes, ElementName=Graphbox, Mode=TwoWay}" IsEnabled="False">
+                            <StackPanel Orientation="Vertical">
+                                <Image Height="32" Width="32" Margin="0,0,0,0" Source="Resource/delnode.png"/>
+                                <TextBlock FontSize="8.68" TextAlignment="Center" Text="Delete Node"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton GroupName="ModeSelection" x:Name="BtnAddConnect" Height="54" Width="54" 
+                                     Style="{StaticResource toggleStyle}" PreviewMouseDown="UnCheck"
+                                     IsChecked="{Binding addEdges, ElementName=Graphbox, Mode=TwoWay}" IsEnabled="False">
+                            <StackPanel Orientation="Vertical">
+                                <Image Height="32" Width="32" Margin="0,0,0,0" Source="Resource/addedge.png"/>
+                                <TextBlock FontSize="8.68" TextAlignment="Center" Text="Add Edge"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton GroupName="ModeSelection" x:Name="BtnDelConnect" Height="54" Width="54" 
+                                     Style="{StaticResource toggleStyle}" PreviewMouseDown="UnCheck"
+                                     IsChecked="{Binding delEdges, ElementName=Graphbox}" IsEnabled="False">
+                            <StackPanel Orientation="Vertical">
+                                <Image Height="32" Width="32" Margin="0,0,0,0" Source="Resource/deledge.png"/>
+                                <TextBlock FontSize="8.68" TextAlignment="Center" Text="Delete Edge"/>
+                            </StackPanel>
+                        </RadioButton>
+                    </StackPanel>
+                    <Button x:Name="BtnColorGen" Height="54" Width="54" HorizontalAlignment="Right" Grid.Column="8" Visibility="Hidden">
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="28" Width="28" Margin="0,2,0,-2" Source="Resource/Color.png"/>
+                            <TextBlock FontSize="8.68" TextAlignment="Center" TextWrapping="Wrap" Text="Generate Color"/>
+                        </StackPanel>
+                    </Button>
+                    <Rectangle Grid.Column="9" Fill="SteelBlue"/>
+                    <Button x:Name="BtnInfo" Height="54" Width="54" Grid.Column="10" VerticalAlignment="Bottom" Click="ShowInfo">
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="32" Width="32" Margin="0,0,0,0" Source="Resource/info.png"/>
+                            <TextBlock FontSize="8.68" TextAlignment="Center" Text="About..."/>
+                        </StackPanel>
+                    </Button>
+                    <Rectangle Grid.Column="11" Fill="SteelBlue"/>
+                    <Button x:Name="BtnHelp" Height="54" Width="54" Grid.Column="12" Click="ShowHelp" >
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="32" Width="32" Source="Resource/help.ico" />
+                            <TextBlock FontSize="8.68" TextAlignment="Center" Text="Help"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="mnuAlgorithm" Header="Algorithm" Width="400" Margin="-2,-1">
+                <Grid x:Name="gridmnuAlgorithm" Background="CornflowerBlue">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ToggleButton x:Name="BtnDrawConnect" Height="54" Width="54" Grid.Column="0" Checked="SetDrawMode" Unchecked="SetDrawMode">
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="32" Width="32" Margin="0,-1,0,-4" Source="Resource/connect.png"/>
+                            <TextBlock FontSize="8.68" TextAlignment="Center" TextWrapping="Wrap" Text="Draw Connect"/>
+                        </StackPanel>
+                    </ToggleButton>
+                    <RadioButton x:Name="BtnDFS" Height="54" Width="54" Grid.Column="1" Style="{StaticResource toggleStyle}" PreviewMouseDown="UnCheck"
+                                  IsChecked="{Binding ElementName=Graphbox,Path=startDFS,Mode=TwoWay}" GroupName="Algorithms" 
+                                 Checked="TurnOffOtherMode" Unchecked="TurnOnOtherMode">
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="32" Width="32" Margin="0,0,0,0" Source="Resource/DFS.png"/>
+                            <TextBlock FontSize="8.68" TextAlignment="Center" TextWrapping="Wrap" Text="DFS"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton x:Name="BtnBFS" Height="54" Width="54" Grid.Column="2" Style="{StaticResource toggleStyle}" PreviewMouseDown="UnCheck"
+                                 IsChecked="{Binding ElementName=Graphbox,Path=startBFS,Mode=TwoWay}" GroupName="Algorithms"
+                                 Checked="TurnOffOtherMode" Unchecked="TurnOnOtherMode">
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="32" Width="32" Margin="0,0,0,0" Source="Resource/BFS.png"/>
+                            <TextBlock FontSize="8.68" TextAlignment="Center" TextWrapping="Wrap"><Run Text="BFS"/></TextBlock>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton x:Name="BtnDijktra" Height="54" Width="54" Grid.Column="3" Style="{StaticResource toggleStyle}" PreviewMouseDown="UnCheck"
+                                 IsChecked="{Binding ElementName=Graphbox,Path=startDijktra,Mode=TwoWay}" GroupName="Algorithms"
+                                 Checked="TurnOffOtherMode" Unchecked="TurnOnOtherMode">
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="32" Width="32" Margin="0,0,0,0" Source="Resource/dijktra.png"/>
+                            <TextBlock FontSize="8.68" TextAlignment="Center" TextWrapping="Wrap" Text="Dijktra" />
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton x:Name="BtnKruskal" Height="54" Width="54" Grid.Column="4" Style="{StaticResource toggleStyle}" PreviewMouseDown="UnCheck"
+                                 IsChecked="{Binding ElementName=Graphbox,Path=startKruskal,Mode=TwoWay}" GroupName="Algorithms"
+                                 Checked="Kruskal" Unchecked="TurnOnOtherMode">
+                        <StackPanel Orientation="Vertical">
+                            <Image Height="32" Width="32" Margin="0,0,0,0" Source="Resource/dijktra.png"/>
+                            <TextBlock FontSize="8.68" TextAlignment="Center" TextWrapping="Wrap" Text="Kruskal" />
+                        </StackPanel>
+                    </RadioButton>
+                    <StackPanel Grid.Column="5" Orientation="Horizontal" Margin="2,0,0,0">
+                        <Button Name="BtnppAlgo" Width="54" Height="54" IsEnabled="False" Click="PPAlgoritm">
+                            <StackPanel Orientation="Vertical">
+                                <Image Name="iconPlayPauseAlgo" Width="32" Height="32" Source="Resource\Pause.png"/>
+                                <TextBlock Name="txtPlayPauseAlgo" FontSize="8.68" TextAlignment="Center" TextWrapping="Wrap" Text="Pause" />
+                            </StackPanel>
+                        </Button>
+                        <Button Name="BtnStopAlgo" Width="54" Height="54" IsEnabled="False" Click="StopAlgoritm">
+                            <StackPanel Orientation="Vertical">
+                                <Image Width="32" Height="32" Source="Resource\Stop.png"/>
+                                <TextBlock FontSize="8.68" TextAlignment="Center" TextWrapping="Wrap" Text="Stop" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Grid Grid.Row="1" ShowGridLines="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" Background="#FFB8CAF9">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" x:Name="InfoStack" Grid.Column="0" Orientation="Vertical" >
+                    <TextBlock TextAlignment="Center" FontFamily="Times New Roman" FontSize="28" 
+                           FontWeight="Bold" Text="Graph Infomation"/>
+                    <TextBlock FontWeight="Bold" TextAlignment="Center" Text="Undirected Graph"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Width="180" Margin="0,0,23,0" TextBlock.FontWeight="Bold" Content="Nodes Count:"/>
+                        <Label Width="40" TextBlock.TextAlignment="Right" Content="{Binding NodesCount, ElementName=Graphbox}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Width="180" Margin="0,0,23,0" TextBlock.FontWeight="Bold" Content="Total Degrees:"/>
+                        <Label Width="40" TextBlock.TextAlignment="Right" Content="{Binding totalDegrees, ElementName=Graphbox}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Width="180" Margin="0,0,23,0" TextBlock.FontWeight="Bold" Content="Connects Count:"/>
+                        <Label Width="40" TextBlock.TextAlignment="Right" Content="{Binding EdgesCount, ElementName=Graphbox}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Width="180" Margin="0,0,23,0" TextBlock.FontWeight="Bold" Content="Connection Count:"/>
+                        <Label Width="40" TextBlock.TextAlignment="Right" Content="{Binding nConnection, ElementName=Graphbox}"/>
+                    </StackPanel>
+                </StackPanel>
+                <TextBox x:Name="LogViewer" Height="200" Margin="10,0" Grid.Row="1" 
+                         HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                         Text="{Binding log, ElementName=Graphbox, Mode=TwoWay}" IsReadOnly="True" 
+                         UndoLimit="0" IsUndoEnabled="False" AllowDrop="False" VerticalAlignment="Bottom" TextChanged="TextboxScroll"/>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="BtnSaveLog" Padding="10,0" Margin="10,5" FontWeight="Bold" Content="Save Log" Click="SaveLog"/>
+                    <Button x:Name="BtnClrLog" Padding="10,0" Margin="10,5" FontWeight="Bold" Content="Clear Log" Click="ClearLog"/>
+                </StackPanel>
+            </Grid>
+            <local:GraphBox x:Name="Graphbox" Grid.Column="1" Background="White" 
+                            Grid.IsSharedSizeScope="True" MouseDown="Graph_MouseDown" Focusable="True"/>
+        </Grid>
+        <StatusBar Grid.Row="2">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid ShowGridLines="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="160"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem Grid.Column="0">
+                <TextBlock Name="FileStatus" TextAlignment="Left"/>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="1">
+                <TextBlock><Run Text="{Binding ElementName=Graphbox,Path=status,Mode=OneWay}"/></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="2">
+                <Grid Width="154">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" FontWeight="Bold"><Run Text="Mouse Coordinate:"/></TextBlock>
+                    <TextBlock Text="{Binding MouseCoordinate, Mode=OneWay}" Grid.Column="1" />
+                </Grid>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+
+</Window>
